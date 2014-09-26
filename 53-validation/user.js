@@ -6,12 +6,22 @@ var SALT_WORK_FACTOR = 10;
 var User;
 
 var UserSchema = new mongoose.Schema({
-  firstName: {type: String},
-  lastName: {type: String},
-  username: {type: String},
-  email: {type: String},
-  password: {type: String}
+  firstName: {type: String, required: true},
+  lastName: {type: String, required: true},
+  email: {
+    type: String, 
+    required: true, 
+    index: {unique: true}
+  },
+  password: {type: String, required: true}
 });
+
+// validation
+// ----------
+
+UserSchema.path("email").validate(function (email){
+  return /.?@.?\.?/.test(email);
+}, "Invalid email address");
 
 // virtual fields
 // --------------
