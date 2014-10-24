@@ -3,10 +3,6 @@ var bcrypt = require("bcrypt");
 
 var User;
 var SALT_WORK_FACTOR = 10;
-var UserStatus = {
-  active: 0,
-  inactive: 1
-};
 
 var UserSchema = mongoose.Schema({
   firstName: {type: String},
@@ -14,7 +10,10 @@ var UserSchema = mongoose.Schema({
   username: {type: String, required: true, index: {unique: true}},
   email: {type: String, required: true},
   password: {type: String, required: true},
-  status: {type: Number, default: UserStatus.active}
+  url: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "url"
+  }
 });
 
 UserSchema.path("email").validate(function(email){

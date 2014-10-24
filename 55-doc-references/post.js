@@ -1,25 +1,34 @@
 var mongoose = require("mongoose");
 var CommentSchema = require("./commentSchema");
-var CommentStatus = require("./commentStatus");
 
 var SchemaTypes = mongoose.Schema.Types;
 
-var Status = {
-  draft: 0,
-  scheduled: 1,
-  published: 2
-};
-
 var PostSchema = new mongoose.Schema({
-  title: {type: String},
-  publishDate: {type: Date, required: true, default: Date.now},
-  content: {type: String},
-  author: {type: SchemaTypes.ObjectId, ref: "user", required: true},
+  date: {type: Date, required: true, default: Date.now},
+  title: {type: String, required: true},
+  content: {type: String, required: true},
+  author: {
+    type: SchemaTypes.ObjectId,
+    ref: "user"
+  },
   comments: [CommentSchema]
 });
 
-PostSchema.static("PostStatus", Status);
-PostSchema.static("CommentStatus", CommentStatus);
+PostSchema.static("loadById", function(id, cb){
+  Post.findById(id)
+    .populate("author")
+    .exec(function(err, post){
+      if (err) { throw err; }
+
+      var options = {
+        path: "author.url",
+        model: "url"
+      };
+
+      Post.populate(post, options, cb);
+    });
+
+});
 
 var Post = mongoose.model("blog", PostSchema);
 module.exports = Post;

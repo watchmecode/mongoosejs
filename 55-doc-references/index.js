@@ -1,27 +1,19 @@
 var mongoose = require("mongoose");
 var User = require("./user");
 var Post = require("./post");
+var URL = require("./url");
 
 mongoose.connect("mongodb://localhost/some_database", function(err){
   if (err) { throw err; }
   console.log("connected");
 
-  User.login("derickbailey", "super s3cret", function(err, user){
+  var urlId = "544a93e63d1d4eb04a605af1";
+  var postId= "544a8fe9ba4294004662ec03";
+
+  Post.loadById(postId, function(err, post){
     if (err) { throw err; }
 
-    Post
-      .find({author: user.id})
-      .populate("author")
-      .exec(function(err, posts){
-        if (err) { throw err; }
-        
-        var post = posts[0];
-
-        console.log(post.author.fullName);
-        process.exit();
-      });
-
+    console.log(post);
+    process.exit();
   });
-  
-
 });
