@@ -1,0 +1,4 @@
+{
+  "mongodb": "mongodb://localhost/some_database",
+  "shared setting": "this is from dev"
+}
